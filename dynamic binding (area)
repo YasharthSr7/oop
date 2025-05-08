@@ -1,0 +1,71 @@
+import java.util.Scanner;
+
+// Abstract base class
+abstract class Shape {
+    double a, b;
+
+    // Method to input dimensions
+    public void input(Scanner sc) {
+        System.out.print("Enter first value (like base/length): ");
+        a = sc.nextDouble();
+        System.out.print("Enter second value (like height/breadth): ");
+        b = sc.nextDouble();
+    }
+
+    // Abstract method to be overridden
+    abstract void computeArea();
+}
+
+// Derived class for Triangle
+class Triangle extends Shape {
+    @Override
+    void computeArea() {
+        double area = 0.5 * a * b;
+        System.out.println("Area of Triangle: " + area);
+    }
+}
+
+// Derived class for Rectangle
+class Rectangle extends Shape {
+    @Override
+    void computeArea() {
+        double area = a * b;
+        System.out.println("Area of Rectangle: " + area);
+    }
+}
+
+// Main class
+public class AreaCalculator {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Shape shape;  // base class reference
+
+        while (true) {
+            System.out.println("\n----- MENU -----");
+            System.out.println("1. Calculate Area of Triangle");
+            System.out.println("2. Calculate Area of Rectangle");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            int ch = sc.nextInt();
+
+            switch (ch) {
+                case 1:
+                    shape = new Triangle(); // dynamic binding
+                    shape.input(sc);
+                    shape.computeArea();
+                    break;
+                case 2:
+                    shape = new Rectangle(); // dynamic binding
+                    shape.input(sc);
+                    shape.computeArea();
+                    break;
+                case 3:
+                    System.out.println("Exiting Program...");
+                    sc.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+            }
+        }
+    }
+}
