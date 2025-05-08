@@ -1,0 +1,420 @@
+import java.io.*;
+import java.util.*;
+
+class Student implements Serializable {
+    private int studentId;
+    private String name;
+    private int rollNo;
+    private String studentClass;
+    private double marks;
+    private String address;
+
+    public Student(int studentId, String name, int rollNo, String studentClass, double marks, String address) {
+        this.studentId = studentId;
+        this.name = name;
+        this.rollNo = rollNo;
+        this.studentClass = studentClass;
+        this.marks = marks;
+        this.address = address;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void update(String name, int rollNo, String studentClass, double marks, String address) {
+        this.name = name;
+        this.rollNo = rollNo;
+        this.studentClass = studentClass;
+        this.marks = marks;
+        this.address = address;
+    }
+
+    public void display() {
+        System.out.println("ID: " + studentId + ", Name: " + name + ", Roll No: " + rollNo +
+                           ", Class: " + studentClass + ", Marks: " + marks + ", Address: " + address);
+    }
+}
+
+public class StudentDatabase {
+    private static final String FILE_NAME = "student_db.txt";
+
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n==== STUDENT DATABASE MENU ====");
+            System.out.println("1. Create Database");
+            System.out.println("2. Display Database");
+            System.out.println("3. Update Record");
+            System.out.println("4. Search Record");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    createDatabase(sc);
+                    break;
+                case 2:
+                    displayDatabase();
+                    break;
+                case 3:
+                    updateRecord(sc);
+                    break;
+                case 4:
+                    searchRecord(sc);
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+        } while (choice != 5);
+    }
+
+    public static void createDatabase(Scanner sc) throws Exception {
+        System.out.print("Enter number of students: ");
+        int n = sc.nextInt();
+        List<Student> students = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nEnter details for student " + (i + 1) + ":");
+            System.out.print("Student ID: ");
+            int id = sc.nextInt();
+            sc.nextLine();
+            System.out.print("Name: ");
+            String name = sc.nextLine();
+            System.out.print("Roll No: ");
+            int roll = sc.nextInt();
+            sc.nextLine();
+            System.out.print("Class: ");
+            String cls = sc.nextLine();
+            System.out.print("Marks: ");
+            double marks = sc.nextDouble();
+            sc.nextLine();
+            System.out.print("Address: ");
+            String address = sc.nextLine();
+
+            students.add(new Student(id, name, roll, cls, marks, address));
+        }
+
+        // Write to file
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_NAME));
+        out.writeObject(students);
+        out.close();
+        System.out.println("Database created successfully.");
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void displayDatabase() throws Exception {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) {
+            System.out.println("Database is empty.");
+            return;
+        }
+
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME));
+        List<Student> students = (List<Student>) in.readObject();
+        in.close();
+
+        if (students.isEmpty()) {
+            System.out.println("No records found.");
+        } else {
+            System.out.println("\n--- Student Records ---");
+            for (Student s : students) {
+                s.display();
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void updateRecord(Scanner sc) throws Exception {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) {
+            System.out.println("No records to update.");
+            return;
+        }
+
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME));
+        List<Student> students = (List<Student>) in.readObject();
+        in.close();
+
+        System.out.print("Enter Student ID to update: ");
+        int id = sc.nextInt();
+        boolean found = false;
+
+        for (Student s : students) {
+            if (s.getStudentId() == id) {
+                sc.nextLine();
+                System.out.print("New Name: ");
+                String name = sc.nextLine();
+                System.out.print("New Roll No: ");
+                int roll = sc.nextInt();
+                sc.nextLine();
+                System.out.print("New Class: ");
+                String cls = sc.nextLine();
+                System.out.print("New Marks: ");
+                double marks = sc.nextDouble();
+                sc.nextLine();
+                System.out.print("New Address: ");
+                String address = sc.nextLine();
+
+                s.update(name, roll, cls, marks, address);
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_NAME));
+            out.writeObject(students);
+            out.close();
+            System.out.println("Record updated successfully.");
+        } else {
+            System.out.println("Student ID not found.");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void searchRecord(Scanner sc) throws Exception {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) {
+            System.out.println("Database is empty.");
+            return;
+        }
+
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME));
+        List<Student> students = (List<Student>) in.readObject();
+        in.close();
+
+        System.out.print("Enter Student ID to search: ");
+        int id = sc.nextInt();
+        boolean found = false;
+
+        for (Student s : students) {
+            if (s.getStudentId() == id) {
+                System.out.println("Record Found:");
+                s.display();import java.io.*;
+import java.util.*;
+
+class Student implements Serializable {
+    private int studentId;
+    private String name;
+    private int rollNo;
+    private String studentClass;
+    private double marks;
+    private String address;
+
+    public Student(int studentId, String name, int rollNo, String studentClass, double marks, String address) {
+        this.studentId = studentId;
+        this.name = name;
+        this.rollNo = rollNo;
+        this.studentClass = studentClass;
+        this.marks = marks;
+        this.address = address;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void update(String name, int rollNo, String studentClass, double marks, String address) {
+        this.name = name;
+        this.rollNo = rollNo;
+        this.studentClass = studentClass;
+        this.marks = marks;
+        this.address = address;
+    }
+
+    public void display() {
+        System.out.println("ID: " + studentId + ", Name: " + name + ", Roll No: " + rollNo +
+                           ", Class: " + studentClass + ", Marks: " + marks + ", Address: " + address);
+    }
+}
+
+public class StudentDatabase {
+    private static final String FILE_NAME = "student_db.txt";
+
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\n==== STUDENT DATABASE MENU ====");
+            System.out.println("1. Create Database");
+            System.out.println("2. Display Database");
+            System.out.println("3. Update Record");
+            System.out.println("4. Search Record");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    createDatabase(sc);
+                    break;
+                case 2:
+                    displayDatabase();
+                    break;
+                case 3:
+                    updateRecord(sc);
+                    break;
+                case 4:
+                    searchRecord(sc);
+                    break;
+                case 5:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid option. Try again.");
+            }
+        } while (choice != 5);
+    }
+
+    public static void createDatabase(Scanner sc) throws Exception {
+        System.out.print("Enter number of students: ");
+        int n = sc.nextInt();
+        List<Student> students = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            System.out.println("\nEnter details for student " + (i + 1) + ":");
+            System.out.print("Student ID: ");
+            int id = sc.nextInt();
+            sc.nextLine();
+            System.out.print("Name: ");
+            String name = sc.nextLine();
+            System.out.print("Roll No: ");
+            int roll = sc.nextInt();
+            sc.nextLine();
+            System.out.print("Class: ");
+            String cls = sc.nextLine();
+            System.out.print("Marks: ");
+            double marks = sc.nextDouble();
+            sc.nextLine();
+            System.out.print("Address: ");
+            String address = sc.nextLine();
+
+            students.add(new Student(id, name, roll, cls, marks, address));
+        }
+
+        // Write to file
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_NAME));
+        out.writeObject(students);
+        out.close();
+        System.out.println("Database created successfully.");
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void displayDatabase() throws Exception {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) {
+            System.out.println("Database is empty.");
+            return;
+        }
+
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME));
+        List<Student> students = (List<Student>) in.readObject();
+        in.close();
+
+        if (students.isEmpty()) {
+            System.out.println("No records found.");
+        } else {
+            System.out.println("\n--- Student Records ---");
+            for (Student s : students) {
+                s.display();
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void updateRecord(Scanner sc) throws Exception {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) {
+            System.out.println("No records to update.");
+            return;
+        }
+
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME));
+        List<Student> students = (List<Student>) in.readObject();
+        in.close();
+
+        System.out.print("Enter Student ID to update: ");
+        int id = sc.nextInt();
+        boolean found = false;
+
+        for (Student s : students) {
+            if (s.getStudentId() == id) {
+                sc.nextLine();
+                System.out.print("New Name: ");
+                String name = sc.nextLine();
+                System.out.print("New Roll No: ");
+                int roll = sc.nextInt();
+                sc.nextLine();
+                System.out.print("New Class: ");
+                String cls = sc.nextLine();
+                System.out.print("New Marks: ");
+                double marks = sc.nextDouble();
+                sc.nextLine();
+                System.out.print("New Address: ");
+                String address = sc.nextLine();
+
+                s.update(name, roll, cls, marks, address);
+                found = true;
+                break;
+            }
+        }
+
+        if (found) {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_NAME));
+            out.writeObject(students);
+            out.close();
+            System.out.println("Record updated successfully.");
+        } else {
+            System.out.println("Student ID not found.");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static void searchRecord(Scanner sc) throws Exception {
+        File file = new File(FILE_NAME);
+        if (!file.exists()) {
+            System.out.println("Database is empty.");
+            return;
+        }
+
+        ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME));
+        List<Student> students = (List<Student>) in.readObject();
+        in.close();
+
+        System.out.print("Enter Student ID to search: ");
+        int id = sc.nextInt();
+        boolean found = false;
+
+        for (Student s : students) {
+            if (s.getStudentId() == id) {
+                System.out.println("Record Found:");
+                s.display();
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Student ID not found.");
+        }
+    }
+}
+
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            System.out.println("Student ID not found.");
+        }
+    }
+}
