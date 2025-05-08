@@ -1,0 +1,85 @@
+import java.util.*;
+
+public class NumberPropertyChecker {
+
+    // Function to check if number is prime
+    public static boolean isPrime(int num) {
+        if (num <= 1) return false;
+        for (int i = 2; i <= Math.sqrt(num); i++)
+            if (num % i == 0) return false;
+        return true;
+    }
+
+    // Function to check if number is palindrome
+    public static boolean isPalindrome(int num) {
+        int original = num, reversed = 0;
+        while (num > 0) {
+            int d = num % 10;
+            reversed = reversed * 10 + d;
+            num /= 10;
+        }
+        return original == reversed;
+    }
+
+    // Generic function to count elements with specific property
+    public static int countByProperty(List<Integer> list, String property) {
+        int count = 0;
+        for (int num : list) {
+            switch (property.toLowerCase()) {
+                case "even":
+                    if (num % 2 == 0) count++;
+                    break;
+                case "odd":
+                    if (num % 2 != 0) count++;
+                    break;
+                case "prime":
+                    if (isPrime(num)) count++;
+                    break;
+                case "palindrome":
+                    if (isPalindrome(num)) count++;
+                    break;
+            }
+        }
+        return count;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        List<Integer> numbers = new ArrayList<>();
+
+        System.out.print("Enter number of elements: ");
+        int n = sc.nextInt();
+        System.out.println("Enter elements:");
+        for (int i = 0; i < n; i++) {
+            numbers.add(sc.nextInt());
+        }
+
+        while (true) {
+            System.out.println("\n----- MENU -----");
+            System.out.println("1. Count Even Numbers");
+            System.out.println("2. Count Odd Numbers");
+            System.out.println("3. Count Prime Numbers");
+            System.out.println("4. Count Palindromes");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            int ch = sc.nextInt();
+
+            String property = "";
+            switch (ch) {
+                case 1: property = "even"; break;
+                case 2: property = "odd"; break;
+                case 3: property = "prime"; break;
+                case 4: property = "palindrome"; break;
+                case 5:
+                    System.out.println("Exiting...");
+                    return;
+                default:
+                    System.out.println("Invalid choice!");
+                    continue;
+            }
+
+            int count = countByProperty(numbers, property);
+            System.out.println("Total " + property + " numbers: " + count);
+        }
+    }
+}
